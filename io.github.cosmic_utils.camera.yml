@@ -46,21 +46,29 @@ modules:
       # Install desktop file
       - install -Dm644 resources/io.github.cosmic_utils.camera.desktop -t /app/share/applications/
       # Install icons (PNG for each size, SVG for scalable)
-      - install -Dm644 resources/icons/hicolor/scalable/apps/io.github.cosmic_utils.camera.svg -t /app/share/icons/hicolor/scalable/apps/
-      - install -Dm644 resources/icons/hicolor/16x16/apps/io.github.cosmic_utils.camera.png -t /app/share/icons/hicolor/16x16/apps/
-      - install -Dm644 resources/icons/hicolor/24x24/apps/io.github.cosmic_utils.camera.png -t /app/share/icons/hicolor/24x24/apps/
-      - install -Dm644 resources/icons/hicolor/32x32/apps/io.github.cosmic_utils.camera.png -t /app/share/icons/hicolor/32x32/apps/
-      - install -Dm644 resources/icons/hicolor/48x48/apps/io.github.cosmic_utils.camera.png -t /app/share/icons/hicolor/48x48/apps/
-      - install -Dm644 resources/icons/hicolor/64x64/apps/io.github.cosmic_utils.camera.png -t /app/share/icons/hicolor/64x64/apps/
-      - install -Dm644 resources/icons/hicolor/128x128/apps/io.github.cosmic_utils.camera.png -t /app/share/icons/hicolor/128x128/apps/
-      - install -Dm644 resources/icons/hicolor/256x256/apps/io.github.cosmic_utils.camera.png -t /app/share/icons/hicolor/256x256/apps/
+      - install -Dm644 resources/icons/hicolor/scalable/apps/io.github.cosmic_utils.camera.svg
+        -t /app/share/icons/hicolor/scalable/apps/
+      - install -Dm644 resources/icons/hicolor/16x16/apps/io.github.cosmic_utils.camera.png
+        -t /app/share/icons/hicolor/16x16/apps/
+      - install -Dm644 resources/icons/hicolor/24x24/apps/io.github.cosmic_utils.camera.png
+        -t /app/share/icons/hicolor/24x24/apps/
+      - install -Dm644 resources/icons/hicolor/32x32/apps/io.github.cosmic_utils.camera.png
+        -t /app/share/icons/hicolor/32x32/apps/
+      - install -Dm644 resources/icons/hicolor/48x48/apps/io.github.cosmic_utils.camera.png
+        -t /app/share/icons/hicolor/48x48/apps/
+      - install -Dm644 resources/icons/hicolor/64x64/apps/io.github.cosmic_utils.camera.png
+        -t /app/share/icons/hicolor/64x64/apps/
+      - install -Dm644 resources/icons/hicolor/128x128/apps/io.github.cosmic_utils.camera.png
+        -t /app/share/icons/hicolor/128x128/apps/
+      - install -Dm644 resources/icons/hicolor/256x256/apps/io.github.cosmic_utils.camera.png
+        -t /app/share/icons/hicolor/256x256/apps/
       # Install metainfo
       - install -Dm644 resources/io.github.cosmic_utils.camera.metainfo.xml -t /app/share/metainfo/
     sources:
       - type: git
         url: https://github.com/cosmic-utils/camera.git
-        tag: v0.1.19
-        commit: 410eded9f6c8646b10ab219223755d77f8640284
+        tag: v0.1.20
+        commit: b6cc2dd5f691afb5dee2edfbededeef53dc0afd9
         x-checker-data:
           type: git
           tag-pattern: ^v([\d.]+)$
