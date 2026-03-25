@@ -22,14 +22,14 @@ jobs:
       - name: Extract tag from manifest
         id: get_tag
         run: |
-          TAG=$(grep -oP '^\s+tag:\s+\K.*' io.github.cosmic_utils.camera.yml | head -1)
+          TAG=$(grep -A1 'cosmic-utils/camera' io.github.cosmic_utils.camera.yml | grep -oP 'tag:\s+\K\S+')
           echo "tag=$TAG" >> $GITHUB_OUTPUT
           echo "Found tag: $TAG"
 
       - name: Fetch Cargo.lock from upstream
         run: |
           TAG="${{ steps.get_tag.outputs.tag }}"
-          curl -sLo Cargo.lock "https://raw.githubusercontent.com/FreddyFunk/cosmic-camera/${TAG}/Cargo.lock"
+          curl -sLo Cargo.lock "https://raw.githubusercontent.com/cosmic-utils/camera/${TAG}/Cargo.lock"
           echo "Downloaded Cargo.lock for $TAG"
 
       - name: Install Python dependencies
