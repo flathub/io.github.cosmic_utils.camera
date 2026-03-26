@@ -159,8 +159,8 @@ modules:
     sources:
       - type: git
         url: https://github.com/cosmic-utils/camera.git
-        tag: v0.3.2
-        commit: 0e83de96a895c50bc747d51cd371f39e85c7f690
+        tag: v0.3.3
+        commit: 53fdc7bd40d8c4446cfed1b7c56ef759d966158c
         x-checker-data:
           type: git
           tag-pattern: ^v([\d.]+)$
