@@ -119,7 +119,9 @@ modules:
     sources:
       - type: git
         url: https://github.com/FreddyFunk/libcamera.git
-        branch: sandbox-ipa-fallback
+        # Pinned by commit only: the Flathub linter rejects `branch` on git
+        # sources (module-libcamera-source-git-branch). This is the tip of the
+        # fork's sandbox-ipa-fallback branch (v0.7.2 rebase).
         commit: 68f8bd1c8cbfe7416fb3fa09f45e18d159d92723
       # Since v0.7.2 the virtual pipeline handler is built on every arch, and it
       # pulls in libyuv as a cmake subproject. Meson would clone libyuv from its
