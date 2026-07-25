@@ -17,7 +17,10 @@ finish-args:
   - --socket=fallback-x11
   # Webcam access (currently no better option than this)
   # https://docs.flatpak.org/en/latest/sandbox-permissions.html#device-access
-  # Automatically includes GPU support since "dri" is part of "all"
+  # Automatically includes GPU support since "dri" is part of "all".
+  # Also exposes /dev/input/event*, which the haptic backend uses for
+  # vibration and the volume_keys backend reads as a shutter trigger on
+  # phones.
   - --device=all
   # Home directory access for saving photos/videos
   - --filesystem=xdg-pictures:rw
@@ -116,7 +119,17 @@ modules:
     sources:
       - type: git
         url: https://github.com/FreddyFunk/libcamera.git
-        commit: b16952df91907858c6d8e646b65478938a91ce08
+        branch: sandbox-ipa-fallback
+        commit: 68f8bd1c8cbfe7416fb3fa09f45e18d159d92723
+      # Since v0.7.2 the virtual pipeline handler is built on every arch, and it
+      # pulls in libyuv as a cmake subproject. Meson would clone libyuv from its
+      # wrap, but the build sandbox has no network. Provide the sources up front
+      # (fetched during the source phase) so meson uses them instead of cloning.
+      # Revision matches subprojects/libyuv.wrap in the libcamera tree.
+      - type: git
+        url: https://chromium.googlesource.com/libyuv/libyuv.git
+        commit: 500f45652c459cfccd20f83f297eb66cb7b015cb
+        dest: subprojects/libyuv
 
   - name: camera
     buildsystem: simple
@@ -159,8 +172,8 @@ modules:
     sources:
       - type: git
         url: https://github.com/cosmic-utils/camera.git
-        tag: v1.0.1
-        commit: 2b502af40ad61ae48dd21335e25bd9a254c86ec4
+        tag: v1.0.2
+        commit: fa90dbb2ea1d1148eda6541de7f1e34cd0b030dd
         x-checker-data:
           type: git
           tag-pattern: ^v([\d.]+)$
