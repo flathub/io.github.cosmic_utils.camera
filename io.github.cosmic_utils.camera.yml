@@ -7,7 +7,7 @@ sdk-extensions:
   - org.freedesktop.Sdk.Extension.llvm21
 base: com.system76.Cosmic.BaseApp
 base-version: stable
-command: camera
+command: klikka
 
 finish-args:
   # Wayland access
@@ -133,13 +133,13 @@ modules:
         commit: 500f45652c459cfccd20f83f297eb66cb7b015cb
         dest: subprojects/libyuv
 
-  - name: camera
+  - name: klikka
     buildsystem: simple
     build-options:
       append-path: /usr/lib/sdk/rust-stable/bin
       env:
-        CARGO_HOME: /run/build/camera/cargo
-        CARGO_TARGET_DIR: /run/build/camera/target
+        CARGO_HOME: /run/build/klikka/cargo
+        CARGO_TARGET_DIR: /run/build/klikka/target
         LIBCLANG_PATH: /usr/lib/sdk/llvm21/lib
         BINDGEN_EXTRA_CLANG_ARGS: -I/usr/lib/sdk/llvm21/lib/clang/21/include
         # libcamera installs to lib64 on x86_64, but flatpak's default
@@ -149,7 +149,7 @@ modules:
       - cargo --offline fetch --manifest-path Cargo.toml --verbose
       - cargo --offline build --release --verbose
       # Install the binary
-      - install -Dm755 target/release/camera -t /app/bin/
+      - install -Dm755 target/release/klikka -t /app/bin/
       # Install desktop file
       - install -Dm644 resources/io.github.cosmic_utils.camera.desktop -t /app/share/applications/
       # Install icons (PNG for each size, SVG for scalable)
@@ -173,7 +173,7 @@ modules:
       - install -Dm644 resources/io.github.cosmic_utils.camera.metainfo.xml -t /app/share/metainfo/
     sources:
       - type: git
-        url: https://github.com/cosmic-utils/camera.git
+        url: https://github.com/cosmic-utils/klikka.git
         tag: v1.1.0
         commit: e1f4dd23ba665796e63399e9a91b48b3dfec4cc3
         x-checker-data:
