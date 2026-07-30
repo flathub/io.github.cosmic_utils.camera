@@ -174,8 +174,8 @@ modules:
     sources:
       - type: git
         url: https://github.com/cosmic-utils/klikka.git
-        tag: v1.1.1
-        commit: 7884e6f9320acb92ba72938becc5cdc73c769405
+        tag: v1.2.0
+        commit: 1f9bab90434507827c743699a51548b18f8483b9
         x-checker-data:
           type: git
           tag-pattern: ^v([\d.]+)$
