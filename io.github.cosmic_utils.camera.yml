@@ -108,6 +108,9 @@ modules:
   - name: libcamera
     buildsystem: meson
     config-opts:
+      # Strip the installed IPA modules before libcamera's install-time signing
+      # step, so flatpak-builder has no debug sections to rewrite afterwards.
+      - -Dstrip=true
       - -Dcam=disabled
       - -Dqcam=disabled
       - -Dgstreamer=disabled
@@ -118,11 +121,9 @@ modules:
       - -Dtest=false
     sources:
       - type: git
-        url: https://github.com/FreddyFunk/libcamera.git
-        # Pinned by commit only: the Flathub linter rejects `branch` on git
-        # sources (module-libcamera-source-git-branch). This is the tip of the
-        # fork's sandbox-ipa-fallback branch (v0.7.2 rebase).
-        commit: 68f8bd1c8cbfe7416fb3fa09f45e18d159d92723
+        url: https://git.libcamera.org/libcamera/libcamera.git
+        tag: v0.7.2
+        commit: 191e202178f02430b5942397c70d215cdd2056fa
       # Since v0.7.2 the virtual pipeline handler is built on every arch, and it
       # pulls in libyuv as a cmake subproject. Meson would clone libyuv from its
       # wrap, but the build sandbox has no network. Provide the sources up front
@@ -174,8 +175,8 @@ modules:
     sources:
       - type: git
         url: https://github.com/cosmic-utils/cosmic-ext-camera.git
-        tag: v1.2.2
-        commit: 32a8ee6ff9057d5438887c020a5d54b79486ccf1
+        tag: v1.3.0
+        commit: 7520175d229c8f261f4bbed52c5e0113f0315350
         x-checker-data:
           type: git
           tag-pattern: ^v([\d.]+)$
