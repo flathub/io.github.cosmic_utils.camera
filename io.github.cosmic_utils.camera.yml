@@ -175,8 +175,8 @@ modules:
     sources:
       - type: git
         url: https://github.com/cosmic-utils/cosmic-ext-camera.git
-        tag: v1.3.2
-        commit: 17e7915bda3540e2123a887b855878211cc3b394
+        tag: v1.3.3
+        commit: 5e00d845b48bc3d0b44ef9534166b47dd52462a6
         x-checker-data:
           type: git
           tag-pattern: ^v([\d.]+)$
