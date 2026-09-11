@@ -1,0 +1,86 @@
+name: Sync upstream Flatpak files
+
+on:
+  pull_request:
+    paths:
+      - 'io.github.cosmic_utils.camera.yml'
+
+jobs:
+  sync-upstream-flatpak-files:
+    # Only run on PRs from flathubbot (external data checker)
+    if: github.actor == 'flathubbot'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract tag from manifest
+        id: get_tag
+        run: |
+          TAG=$(grep -A1 'cosmic-utils/cosmic-ext-camera' io.github.cosmic_utils.camera.yml | grep -oP 'tag:\s+\K\S+')
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "Found tag: $TAG"
+
+      - name: Fetch Flatpak files from upstream release
+        run: |
+          TAG="${{ steps.get_tag.outputs.tag }}"
+          BASE_URL="https://raw.githubusercontent.com/cosmic-utils/cosmic-ext-camera/${TAG}"
+          curl --fail --show-error --location \
+            --output "$RUNNER_TEMP/upstream-manifest.yml" \
+            "$BASE_URL/io.github.cosmic_utils.camera.yml"
+          curl --fail --show-error --location \
+            --output cargo-sources.json \
+            "$BASE_URL/cargo-sources.json"
+          echo "Downloaded Flatpak files for $TAG"
+
+      - name: Sync upstream manifest
+        run: |
+          python3 <<'PY'
+          import os
+          import re
+          from pathlib import Path
+
+          manifest_path = Path("io.github.cosmic_utils.camera.yml")
+          upstream_path = Path(os.environ["RUNNER_TEMP"]) / "upstream-manifest.yml"
+          current = manifest_path.read_text()
+          upstream = upstream_path.read_text()
+
+          def camera_sources(text):
+              camera = text.index("  - name: camera\n")
+              marker = "    sources:\n"
+              start = text.index(marker, camera) + len(marker)
+              boundary = re.search(r"(?m)^  \S", text[start:])
+              end = start + boundary.start() if boundary else len(text)
+              return start, end, text[start:end]
+
+          _, _, flathub_sources = camera_sources(current)
+          start, end, upstream_sources = camera_sources(upstream)
+          if "type: git" not in flathub_sources or \
+                  "cosmic-utils/cosmic-ext-camera.git" not in flathub_sources:
+              raise SystemExit("Flathub camera git source was not found")
+          if "type: dir" not in upstream_sources or "path: ." not in upstream_sources:
+              raise SystemExit("Upstream camera directory source was not found")
+
+          manifest_path.write_text(upstream[:start] + flathub_sources + upstream[end:])
+          PY
+          echo "Synced upstream manifest while preserving the Flathub git source"
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add io.github.cosmic_utils.camera.yml cargo-sources.json
+
+          if git diff --staged --quiet; then
+            echo "Flatpak files are already synchronized"
+          else
+            git commit -m "Sync Flatpak files for ${{ steps.get_tag.outputs.tag }}"
+            git push
+            echo "Pushed synchronized Flatpak files"
+          fi
