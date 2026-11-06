@@ -44,6 +44,9 @@ finish-args:
   - --system-talk-name=org.freedesktop.NetworkManager
 
 modules:
+  # AVIF decoding uses dav1d from the Freedesktop SDK/Platform (>= 1.3.0).
+  # In both 25.08 and 26.08, the SDK supplies headers/pkg-config metadata and
+  # the Platform supplies the runtime library; no native module is needed.
   # Python build dependencies required by libcamera's meson build.
   # The Freedesktop SDK includes markupsafe but not jinja2/pyyaml, which
   # libcamera needs for code generation during its meson configure step.
@@ -132,10 +135,10 @@ modules:
     sources:
       - type: git
         url: https://git.libcamera.org/libcamera/libcamera.git
-        tag: v0.7.2
-        commit: 191e202178f02430b5942397c70d215cdd2056fa
-      # Since v0.7.2 the virtual pipeline handler is built on every arch, and it
-      # pulls in libyuv as a cmake subproject. Meson would clone libyuv from its
+        tag: v0.8.0
+        commit: df8e348d64b4932a0676256ed24f0da3ee9438bc
+      # The virtual pipeline handler is built on every arch and pulls in
+      # libyuv as a cmake subproject. Meson would clone libyuv from its
       # wrap, but the build sandbox has no network. Provide the sources up front
       # (fetched during the source phase) so meson uses them instead of cloning.
       # Revision matches subprojects/libyuv.wrap in the libcamera tree.
@@ -182,8 +185,8 @@ modules:
     sources:
       - type: git
         url: https://github.com/cosmic-utils/cosmic-ext-camera.git
-        tag: v1.3.7
-        commit: 5269ff71ab9cd5b01cbee7262b3b74b1b31f71f3
+        tag: v1.11.0
+        commit: fe31ed6d1d08e215f2b312753b4ab1d05298d8ce
         x-checker-data:
           type: git
           tag-pattern: ^v([\d.]+)$
